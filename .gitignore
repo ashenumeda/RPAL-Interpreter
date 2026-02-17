@@ -20,7 +20,7 @@
 bin/
 build/
 
-# CMake files (if you use later)
+# CMake files
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
