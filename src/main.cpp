@@ -32,7 +32,11 @@ int main() {
     }
 
     for (auto x: tokenList) {
-        std::cout << tokenTypeToString(x.type) << x.value << "\n";
+        std::cout << "<" 
+                  << tokenTypeToString(x.type) 
+                  <<  ", \"" 
+                  << x.value 
+                  << "\">"
+                  << "\n";
     }
 }       
-

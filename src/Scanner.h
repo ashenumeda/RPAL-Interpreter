@@ -19,11 +19,14 @@ private:
     Token scanNumber();
     Token scanString();
     Token scanOperator();
+    Token scanPunction();
 
     bool isLetter(char c);
     bool isDigit(char c);
     bool isOperator(char c);
     bool isComment();
+    bool isSpace(char c);
+    bool isPunction(char c);
 
 public:
     Scanner(const std::string& soruce);

@@ -33,7 +33,7 @@ Token Scanner::getNextToken() {
     while (position < input.length()) {
         char c = currentChar();
 
-        if (isspace(c)) {
+        if (isSpace(c)) {
             skipWhitespace();
             continue;
         }
@@ -59,6 +59,10 @@ Token Scanner::getNextToken() {
             return scanOperator();
         }
 
+        if (isPunction(c)) {
+            return scanPunction();
+        }
+
         return Token(TokenType::ERROR, std::string(1, c));
     }
     return Token(TokenType::END_OF_FILE, "");
@@ -81,7 +85,7 @@ bool Scanner::isDigit(char c) {
 }
 
 bool Scanner::isOperator(char c) {
-    std::string ops = "+-*/=<>&|.@:/~^$!#%[]{}()";
+    std::string ops = "+-*<>&.@/:=~|$!#%^_[]{}\"`?";
     return ops.find(c) != std::string::npos;
 }
 
@@ -89,14 +93,21 @@ bool Scanner::isComment() {
     if (position + 1 >= input.length()) {
         return false;
     }
-    std::cout << "Incomplete current\n";
     return input[position] == '/' && input[position + 1] == '/';
+}
+
+bool Scanner::isSpace(char c) {
+    return c == ' ' || c == '\t' || c == '\n' || c == '\r';
+}
+
+bool Scanner::isPunction(char c) {
+    return c == '(' || c == ')' || c == ';' || c == ',';
 }
 
 Token Scanner::scanIdentifire() {
     std::string tokenValue;
 
-    while (position < input.length() && (isLetter(currentChar())) || (isDigit(currentChar())) || (currentChar() == '_')) {
+    while (position < input.length() && (isLetter(currentChar()) || isDigit(currentChar()) || currentChar() == '_')) {
         tokenValue += currentChar();
         getNextChar();
     }
@@ -146,6 +157,16 @@ Token Scanner::scanOperator() {
     return Token(TokenType::OPERATOR, tokenValue);
 }
 
+Token Scanner::scanPunction() {
+    std::string tokenValue;
+
+    while (position < input.length() && isPunction(currentChar())) {
+        tokenValue += currentChar();
+        getNextChar();
+    }
+    return Token(TokenType::PUNCTUATION, tokenValue);
+}
+
 void Scanner::skipComment() {
     while (position <input.length() && (currentChar() != '\n')) {
         getNextChar();
@@ -153,7 +174,7 @@ void Scanner::skipComment() {
 }
 
 void Scanner::skipWhitespace() {
-    while (position <input.length() && isspace(currentChar())) {
+    while (position <input.length() && isSpace(currentChar())) {
         getNextChar();
     }
 }
